@@ -43,9 +43,11 @@ class ProbeIntell{
             //同时进行建立http连接
             self._makeHttpConn(netObj,ev);
         });
+        this.ev = ev;
     }
 
     init(){
+        const self = this;
         //初始化方法。进行设定
         //进行判断对应文件是否存在。如果存在路径直接进行设定http连接；
         fs.readFile('config.json',(err,data)=>{
@@ -53,11 +55,13 @@ class ProbeIntell{
                 console.error(err);
                 return;
             }else{
-                console.info(data);
+                if(!data || data == ''){
+                    return;
+                }
                 const configObj = JSON.parse(data);
 
                 //进行直接连接对应http处理；
-                this._makeHttpConn(configObj,this.ev);
+                this._makeHttpConn(configObj,self.ev);
                 
             }
         })

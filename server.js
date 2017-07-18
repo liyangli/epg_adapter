@@ -46,7 +46,9 @@ class UdpRevice{
     }
 }
 
-const http = require('http');
+const net = require('net');
+const moment = require('moment');
+const qs = require('querystring');
 /**
  * http客户端发送设备相关数据
  */
@@ -54,17 +56,11 @@ class HttpClient{
     
     constructor(ip,port,ev){
         const self = this;
-        this.req = http.request({
+        this.client = net.createConnection({
             host: ip,
-            port: port,
-            path:"/",
-            method: "post",
-            headers: {
-                'Content-Type': 'application/x-www-form-urlencoded'
-            }
-        }, (res)=>{
-            //发送成功;
-            res.setEncoding('utf8');
+            port: port
+        }, ()=>{
+            //连接成功
             ev.on("reviceEventName",function(obj){
                 //需要获取对应obj中的msgID;然后进行返回对应数据；
                 console.info(obj);
@@ -75,9 +71,9 @@ class HttpClient{
 
             });
 
-            new ReceiveDeal(c,ev);
-        }); 
-        
+
+        });
+        new ReceiveDeal(this.client,ev);
         this.ev = ev;
     }
 
@@ -105,7 +101,7 @@ Content-Type: application/json;charset=UTF-8\r\n`;
     }
     send(content){
         //作为一个http客户端进行设定;
-        this._send(this.req,content);
+        this._send(this.client,content);
         
         this.ev.on("sendFinish",(result)=>{
             console.info("sendFinish->"+result);

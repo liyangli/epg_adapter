@@ -20,7 +20,7 @@ var setting = {
         surveyTime: 3*1000,//探测默认时长
         recive: {
             //接收对象
-            ip: '172.17.9.111',
+            ip: '172.17.9.71',
             netmask: '255.255.255.0',
             gateway: '172.17.9.1',
             port: 1900
